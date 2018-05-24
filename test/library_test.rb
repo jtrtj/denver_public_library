@@ -2,6 +2,8 @@ require './test/test_helper'
 require './lib/library.rb'
 require './lib/author.rb'
 require './lib/book.rb'
+require  'pry'
+
 
 
 class LibraryTest < Minitest::Test
@@ -43,4 +45,36 @@ class LibraryTest < Minitest::Test
     assert_equal harper_lee.books[0], dpl.books[1]
     assert_equal charlotte_bronte.books[1], dpl.books[2]
   end
+
+  def test_library_can_make_an_array_of_titles_in_collection
+    dpl = Library.new
+    charlotte_bronte = Author.new({first_name: "Charlotte", last_name: "Bronte"})
+    jane_eyre = charlotte_bronte.add_book("Jane Eyre", "October 16, 1847")
+    villette  = charlotte_bronte.add_book("Villette", "1853")
+    harper_lee  = Author.new({first_name: "Harper", last_name: "Lee"})
+    mockingbird = harper_lee.add_book("To Kill a Mockingbird", "July 11, 1960")
+
+    dpl.add_to_collection(jane_eyre)
+    dpl.add_to_collection(mockingbird)
+    dpl.add_to_collection(villette)
+
+    assert_equal ['Jane Eyre', 'To Kill a Mockingbird', 'Villette'], dpl.titles_in_collection
+  end
+
+  def test_library_can_be_searched_by_title
+    dpl = Library.new
+    charlotte_bronte = Author.new({first_name: "Charlotte", last_name: "Bronte"})
+    jane_eyre = charlotte_bronte.add_book("Jane Eyre", "October 16, 1847")
+    villette  = charlotte_bronte.add_book("Villette", "1853")
+    harper_lee  = Author.new({first_name: "Harper", last_name: "Lee"})
+    mockingbird = harper_lee.add_book("To Kill a Mockingbird", "July 11, 1960")
+
+    dpl.add_to_collection(jane_eyre)
+    dpl.add_to_collection(mockingbird)
+    dpl.add_to_collection(villette)
+
+    assert dpl.include?("To Kill a Mockingbird")
+    refute dpl.include?("A Connecticut Yankee in King Arthur's Court")
+  end
+
 end
